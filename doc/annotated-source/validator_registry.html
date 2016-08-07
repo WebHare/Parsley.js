@@ -293,7 +293,9 @@ excludes network &amp; broacast addresses
             
             <div class="content"><div class='highlight'><pre>        <span class="hljs-string">"(?:/\\S*)?"</span> +
       <span class="hljs-string">"$"</span>, <span class="hljs-string">'i'</span>
-    )
+    ),
+
+  isodate: <span class="hljs-regexp">/^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/</span>
 };
 typeRegexes.range = typeRegexes.number;</pre></div></div>
             
@@ -736,6 +738,27 @@ Alternatively, a validator can be a function that returns such an object</li>
         <span class="hljs-keyword">return</span> value &gt;= min &amp;&amp; value &lt;= max;
       },
       requirementType: [<span class="hljs-string">'number'</span>, <span class="hljs-string">'number'</span>],
+      priority: <span class="hljs-number">30</span>
+    },
+    isodaterange: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, min, max</span>) </span>{
+        <span class="hljs-keyword">return</span> value &gt;= min &amp;&amp; value &lt;= max;
+      },
+      requirementType: [<span class="hljs-string">'isodate'</span>, <span class="hljs-string">'isodate'</span>],
+      priority: <span class="hljs-number">30</span>
+    },
+    isodatemin: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, min</span>) </span>{
+        <span class="hljs-keyword">return</span> value &gt;= min;
+      },
+      requirementType: <span class="hljs-string">'isodate'</span>,
+      priority: <span class="hljs-number">30</span>
+    },
+    isodatemax: {
+      validateString: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, max</span>) </span>{
+        <span class="hljs-keyword">return</span> value &lt;= max;
+      },
+      requirementType: <span class="hljs-string">'isodate'</span>,
       priority: <span class="hljs-number">30</span>
     },
     equalto: {

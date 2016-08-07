@@ -1,6 +1,6 @@
 /*!
 * Parsley.js
-* Version 2.4.4 - built Thu, Aug 4th 2016, 9:54 pm
+* Version 2.4.4 - built Sun, Aug 7th 2016, 1:12 pm
 * http://parsleyjs.org
 * Guillaume Potier - <guillaume@wisembly.com>
 * Marc-Andre Lafortune - <petroselinum@marc-andre.ca>
@@ -377,6 +377,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     object: function object(string) {
       return ParsleyUtils__default.deserializeValue(string);
     },
+    isodate: function isodate(string) {
+      var parts = string.match(/^(\d{4})-(\d\d)-(\d\d)$/);
+      if (!parts) throw 'Invalid isodate: "' + string + '"';
+      return string;
+    },
     regexp: function regexp(_regexp) {
       var flags = '';
 
@@ -530,7 +535,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     // port number
     "(?::\\d{2,5})?" +
     // resource path
-    "(?:/\\S*)?" + "$", 'i')
+    "(?:/\\S*)?" + "$", 'i'),
+
+    isodate: /^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/
   };
   typeRegexes.range = typeRegexes.number;
 
@@ -800,6 +807,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return value >= min && value <= max;
         },
         requirementType: ['number', 'number'],
+        priority: 30
+      },
+      isodaterange: {
+        validateString: function validateString(value, min, max) {
+          return value >= min && value <= max;
+        },
+        requirementType: ['isodate', 'isodate'],
+        priority: 30
+      },
+      isodatemin: {
+        validateString: function validateString(value, min) {
+          return value >= min;
+        },
+        requirementType: 'isodate',
+        priority: 30
+      },
+      isodatemax: {
+        validateString: function validateString(value, max) {
+          return value <= max;
+        },
+        requirementType: 'isodate',
         priority: 30
       },
       equalto: {
@@ -1679,13 +1707,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       if ('string' === typeof this.$element.attr('pattern')) this.addConstraint('pattern', this.$element.attr('pattern'), undefined, true);
 
       // range
-      if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max')) this.addConstraint('range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
+      if ('undefined' !== typeof this.$element.attr('min') && 'undefined' !== typeof this.$element.attr('max')) this.addConstraint(this.$element.attr('type') == 'date' ? 'isodaterange' : 'range', [this.$element.attr('min'), this.$element.attr('max')], undefined, true);
 
       // HTML5 min
-      else if ('undefined' !== typeof this.$element.attr('min')) this.addConstraint('min', this.$element.attr('min'), undefined, true);
+      else if ('undefined' !== typeof this.$element.attr('min')) this.addConstraint(this.$element.attr('type') == 'date' ? 'isodatemin' : 'min', this.$element.attr('min'), undefined, true);
 
         // HTML5 max
-        else if ('undefined' !== typeof this.$element.attr('max')) this.addConstraint('max', this.$element.attr('max'), undefined, true);
+        else if ('undefined' !== typeof this.$element.attr('max')) this.addConstraint(this.$element.attr('type') == 'date' ? 'isodatemax' : 'max', this.$element.attr('max'), undefined, true);
 
       // length
       if ('undefined' !== typeof this.$element.attr('minlength') && 'undefined' !== typeof this.$element.attr('maxlength')) this.addConstraint('length', [this.$element.attr('minlength'), this.$element.attr('maxlength')], undefined, true);

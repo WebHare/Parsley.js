@@ -135,6 +135,12 @@
   object: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
     <span class="hljs-keyword">return</span> ParsleyUtils.deserializeValue(string);
   },
+  isodate: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">string</span>) </span>{
+    <span class="hljs-keyword">var</span> parts = string.match(<span class="hljs-regexp">/^(\d{4})-(\d\d)-(\d\d)$/</span>);
+    <span class="hljs-keyword">if</span> (!parts)
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">'Invalid isodate: "'</span> + string + <span class="hljs-string">'"'</span>;
+    <span class="hljs-keyword">return</span> string;
+  },
   regexp: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">regexp</span>) </span>{
     <span class="hljs-keyword">var</span> flags = <span class="hljs-string">''</span>;</pre></div></div>
             
